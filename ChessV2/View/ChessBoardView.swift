@@ -7,59 +7,62 @@
 
 import SwiftUI
 
-struct ChessBoardView: View {
-    @ObservedObject var chessBoardController: ChessBoardController
+public struct ChessBoardView: View {
+    @ObservedObject var chessBoardController: ChessBoardController = ChessBoardController()
     
-    var body: some View {
+    var afterMove: (String)->Void
+    
+    public var body: some View {
         chessBoardView
+        Text("\(chessBoardController.recentMoveToIndex)")
     }
     
-    @Namespace private var animatePiece
+    init(chessBoardController: ChessBoardController, afterMove: @escaping (String)->Void) {
+        self.chessBoardController = chessBoardController
+        self.afterMove = afterMove
+    }
     
+    @ViewBuilder
     var chessBoardView: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0) {
             ForEach(0..<8) { row in
                 GridRow {
                     ForEach((row*8)..<(row*8+8), id: \.self) { i in
+                        let piece = chessBoardController.pieces[i]
                         var squareColor: Color {
-                            if i == chessBoardController.recentMoveFromIndex {
-                                .orange
-                            } else if i == chessBoardController.recentMoveToIndex {
-                                .yellow
+                            if chessBoardController.recentMoveToIndex == i {
+                                return .orange
+                            } else if chessBoardController.recentMoveFromIndex == i {
+                                return .yellow
                             } else {
-                                .white
+                                return .white
                             }
                         }
-                        let piece = chessBoardController.pieces[i]
-                            Rectangle().stroke()
-                                .overlay {
-                                    if piece == nil {
-                                        EmptyView()
-                                    } else {
-                                        Image(piece!.image)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .zIndex(1)
-                                            .matchedGeometryEffect(id: piece!.id, in: animatePiece)
-                                            .background(piece!.isPicked ? Color.brown : nil)
-                                            
-                                    }
-                                }
-                                .background(squareColor)
-                                .aspectRatio(1.0, contentMode: .fit)
+                        ZStack {
+                            ChessPieceView(piece: piece, color: squareColor)
+                                .background(.white)
                                 .onTapGesture {
-                                    withAnimation(.easeInOut.speed(2)) {
-                                        chessBoardController.choose(index: i)
+                                    if let move = chessBoardController.choose(index: i) {
+                                        afterMove(move)
                                     }
-                                    
                                 }
+                                .rotationEffect(chessBoardController.orientation ? .degrees(180) : .zero)
+                        }
                     }
                 }
             }
         }
+        .rotationEffect(chessBoardController.orientation ? .degrees(180) : .zero)
     }
+    
+    
+    
 }
 
+
 #Preview {
-    ChessBoardView(chessBoardController: ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+    ChessBoardView(chessBoardController: ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"), afterMove: {move in
+        print(move)
+        
+    })
 }

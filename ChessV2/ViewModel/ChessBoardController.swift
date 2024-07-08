@@ -6,45 +6,82 @@
 //
 
 import Foundation
+import SwiftUI
 
 class ChessBoardController: ObservableObject {
+    let Ranks = ["1","2","3","4","5","6","7","8"]
+    let Files = ["a","b","c","d","e","f","g","h"]
     
     @Published private(set) var pieces = [Piece?]()
     @Published private(set) var recentMoveFromIndex: Int = -1
     @Published private(set) var recentMoveToIndex: Int = -1
+    @Published private(set) var orientation = false
     
-    init(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+    
+    init(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", orientation: Bool = false) {
         placePieceByFen(fen: fen)
+        self.orientation = orientation
     }
     
-    func choose(index: Int) {
-        print(index)
+    func orientationSwitch() {
+        self.orientation.toggle()
+    }
+    
+    func choose(index: Int) -> String? {
         if pieces[index] != nil {
             if let alreadyChosenIndex {
                 if alreadyChosenIndex != index {
-                    move(fromIndex: alreadyChosenIndex, toIndex: index)
                     resetIsPicked()
+                    return move(fromIndex: alreadyChosenIndex, toIndex: index)
                 } else {
                     pieces[index]!.isPicked = false
+                    return nil
                 }
             } else {
                 pieces[index]!.isPicked = true
+                return nil
             }
         } else {
             if let alreadyChosenIndex {
-                move(fromIndex: alreadyChosenIndex, toIndex: index)
                 resetIsPicked()
+                return move(fromIndex: alreadyChosenIndex, toIndex: index)
+            } else {
+                return nil
             }
         }
     }
     
-    func move(fromIndex: Int, toIndex: Int) {
-        if pieces[fromIndex] != nil {
-            pieces[toIndex] = pieces[fromIndex]!
-            pieces[fromIndex] = nil
-            recentMoveFromIndex = fromIndex
-            recentMoveToIndex = toIndex
+    func moveFormatToIndex(move: String) -> (Int,Int) {
+        let startIndex = move.startIndex
+        let middleIndex = move.index(startIndex, offsetBy: 2)
+
+        let firstMove = String(move[startIndex..<middleIndex])
+        let secondMove = String(move[middleIndex...])
+        return (fromSquareToIndex(square: firstMove), fromSquareToIndex(square: secondMove))
+    }
+    
+    func fromSquareToIndex(square: String) -> Int {
+        let splitString = square.split(separator: "")
+        let file = splitString[0]
+        let rank = splitString[1]
+        let rankIndex = Ranks.firstIndex { $0 == rank }
+        print(rankIndex!)
+        let fileIndex = Files.firstIndex{ $0 == file }
+        print(fileIndex!)
+        return ((7-rankIndex!)*8 + fileIndex!)
+    }
+    
+    func move(fromIndex: Int, toIndex: Int) -> String {
+        withAnimation(.easeIn.speed(2)) {
+            if pieces[fromIndex] != nil {
+                pieces[toIndex] = pieces[fromIndex]
+                pieces[fromIndex] = nil
+                resetIsPicked()
+                recentMoveFromIndex = fromIndex
+                recentMoveToIndex = toIndex
+            }
         }
+        return indexToId(index: fromIndex) + indexToId(index: toIndex)
     }
     
     var alreadyChosenIndex: Int? {
@@ -58,6 +95,12 @@ class ChessBoardController: ObservableObject {
         }
     }
     
+    func indexToId(index: Int) -> String {
+        let rankIndex = index / 8
+        let fileIndex = index % 8
+        return Files[fileIndex] + Ranks.reversed()[rankIndex]
+    }
+    
     func resetIsPicked() {
         for index in pieces.indices {
             if pieces[index] != nil {
@@ -67,6 +110,7 @@ class ChessBoardController: ObservableObject {
     }
     
     func placePieceByFen(fen: String) {
+        var id: Int = 0
         for char in fen {
             if char.isNumber {
                 let emptySlot = Int(String(char))!
@@ -106,6 +150,7 @@ class ChessBoardController: ObservableObject {
                 }
                 pieces.append(piece)
             }
+            id += 1
             if char == " " {
                 break
             }
