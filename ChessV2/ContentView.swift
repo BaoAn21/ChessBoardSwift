@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     let api = "lip_IWZ4ELQzWdJgDsjQOrOS"
-    let boardID = "xkczCGox"
+    let boardID = "mLEzzBps"
     @StateObject var chessBoardController = ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", orientation: false)
     var body: some View {
         ChessBoardView(chessBoardController: chessBoardController) { move in

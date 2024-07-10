@@ -58,11 +58,15 @@ struct BoardAPI {
                     print(jsonString)
                 }
                 if let boardState = try? decoder.decode(BoardState.self, from: data) {
-                    print(getLatestMove(moves: boardState.moves))
-                    moveReceive(getLatestMove(moves: boardState.moves))
+                    DispatchQueue.main.async {
+                        print(getLatestMove(moves: boardState.moves))
+                        self.moveReceive(getLatestMove(moves: boardState.moves))
+                    }
                 } else if let boardInfo = try? decoder.decode(BoardInfo.self, from: data) {
-                    print(boardInfo.black.name)
-                    boardInfoReceive(boardInfo)
+                    DispatchQueue.main.async {
+                        print(boardInfo.black.name)
+                        self.boardInfoReceive(boardInfo)
+                    }
                 }
 //                 Print the JSON string if decoding fails
 //                else if let jsonString = String(data: data, encoding: .utf8) {

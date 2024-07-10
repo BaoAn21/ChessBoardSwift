@@ -65,9 +65,7 @@ class ChessBoardController: ObservableObject {
         let file = splitString[0]
         let rank = splitString[1]
         let rankIndex = Ranks.firstIndex { $0 == rank }
-        print(rankIndex!)
         let fileIndex = Files.firstIndex{ $0 == file }
-        print(fileIndex!)
         return ((7-rankIndex!)*8 + fileIndex!)
     }
     
