@@ -35,7 +35,7 @@ struct BoardAPI {
         task.resume()
     }
     
-    static func streamBoard(gameId: String, tokenId: String, moveReceice:@escaping (String) -> Void, boardInfoReceive:@escaping (BoardInfo) -> Void) {
+    static func streamBoard(gameId: String, tokenId: String, moveReceice:@escaping (String) -> Void, boardInfoReceive:@escaping (BoardInfo) -> Void, boardStateReceive:@escaping (BoardState) -> Void ) {
         
         let url = URL(string: "https://lichess.org/api/board/game/stream/\(gameId)")!
 
@@ -48,9 +48,12 @@ struct BoardAPI {
         class StreamDelegate: NSObject, URLSessionDataDelegate {
             private let boardInfoReceive: (BoardInfo) -> Void
             private let moveReceive: (String) -> Void
-            init(moveReceive: @escaping (String) -> Void, boardInfoReceive:@escaping (BoardInfo) -> Void) {
+            private let boardStateReceive:(BoardState) -> Void
+            
+            init(moveReceive: @escaping (String) -> Void, boardInfoReceive:@escaping (BoardInfo) -> Void, boardStateReceive:@escaping (BoardState) -> Void) {
                 self.moveReceive = moveReceive
                 self.boardInfoReceive = boardInfoReceive
+                self.boardStateReceive = boardStateReceive
             }
             func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
                 let decoder = JSONDecoder()
@@ -59,13 +62,16 @@ struct BoardAPI {
                 }
                 if let boardState = try? decoder.decode(BoardState.self, from: data) {
                     DispatchQueue.main.async {
-                        print(getLatestMove(moves: boardState.moves))
                         self.moveReceive(getLatestMove(moves: boardState.moves))
+                        self.boardStateReceive(boardState)
                     }
                 } else if let boardInfo = try? decoder.decode(BoardInfo.self, from: data) {
                     DispatchQueue.main.async {
                         print(boardInfo.black.name)
                         self.boardInfoReceive(boardInfo)
+                        if !boardInfo.state.moves.isEmpty {
+                            self.moveReceive(getLatestMove(moves: boardInfo.state.moves))
+                        }
                     }
                 }
 //                 Print the JSON string if decoding fails
@@ -86,7 +92,7 @@ struct BoardAPI {
         }
 
         // Use the delegate in the session
-        let streamDelegate = StreamDelegate(moveReceive: moveReceice, boardInfoReceive: boardInfoReceive)
+        let streamDelegate = StreamDelegate(moveReceive: moveReceice, boardInfoReceive: boardInfoReceive, boardStateReceive: boardStateReceive)
         let streamSession = URLSession(configuration: .default, delegate: streamDelegate, delegateQueue: OperationQueue())
         let streamTask = streamSession.dataTask(with: request)
 

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AD401EB42C35653400C3DB49 /* ChessV2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EB32C35653400C3DB49 /* ChessV2App.swift */; };
-		AD401EB62C35653400C3DB49 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EB52C35653400C3DB49 /* ContentView.swift */; };
+		AD401EB62C35653400C3DB49 /* ChessPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EB52C35653400C3DB49 /* ChessPlayView.swift */; };
 		AD401EB82C35653500C3DB49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD401EB72C35653500C3DB49 /* Assets.xcassets */; };
 		AD401EBB2C35653500C3DB49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD401EBA2C35653500C3DB49 /* Preview Assets.xcassets */; };
 		AD401EC42C35655300C3DB49 /* ChessBoardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EC32C35655300C3DB49 /* ChessBoardModel.swift */; };
@@ -17,12 +17,16 @@
 		AD401EEF2C39471A00C3DB49 /* ChessPieceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EEE2C39471A00C3DB49 /* ChessPieceView.swift */; };
 		AD401EF52C3BE32800C3DB49 /* BoardAPIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EF32C3BE32800C3DB49 /* BoardAPIModel.swift */; };
 		AD401EF82C3BF6D600C3DB49 /* BoardAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD401EF72C3BF6D600C3DB49 /* BoardAPI.swift */; };
+		AD5084082C3E6D4400451C6F /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5084072C3E6D4400451C6F /* MainScreen.swift */; };
+		AD50840A2C3E75B500451C6F /* EventAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5084092C3E75B500451C6F /* EventAPI.swift */; };
+		AD50840C2C3E761E00451C6F /* EventAPIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD50840B2C3E761E00451C6F /* EventAPIModel.swift */; };
+		AD50840E2C3E835A00451C6F /* ChallengeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD50840D2C3E835A00451C6F /* ChallengeAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AD401EB02C35653400C3DB49 /* ChessV2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessV2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD401EB32C35653400C3DB49 /* ChessV2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessV2App.swift; sourceTree = "<group>"; };
-		AD401EB52C35653400C3DB49 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AD401EB52C35653400C3DB49 /* ChessPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessPlayView.swift; sourceTree = "<group>"; };
 		AD401EB72C35653500C3DB49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD401EBA2C35653500C3DB49 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AD401EC32C35655300C3DB49 /* ChessBoardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardModel.swift; sourceTree = "<group>"; };
@@ -31,6 +35,10 @@
 		AD401EEE2C39471A00C3DB49 /* ChessPieceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessPieceView.swift; sourceTree = "<group>"; };
 		AD401EF32C3BE32800C3DB49 /* BoardAPIModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardAPIModel.swift; sourceTree = "<group>"; };
 		AD401EF72C3BF6D600C3DB49 /* BoardAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardAPI.swift; sourceTree = "<group>"; };
+		AD5084072C3E6D4400451C6F /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		AD5084092C3E75B500451C6F /* EventAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAPI.swift; sourceTree = "<group>"; };
+		AD50840B2C3E761E00451C6F /* EventAPIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAPIModel.swift; sourceTree = "<group>"; };
+		AD50840D2C3E835A00451C6F /* ChallengeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +76,6 @@
 				AD401EC22C35654100C3DB49 /* Model */,
 				AD401EC12C35653B00C3DB49 /* View */,
 				AD401EB32C35653400C3DB49 /* ChessV2App.swift */,
-				AD401EB52C35653400C3DB49 /* ContentView.swift */,
 				AD401EB72C35653500C3DB49 /* Assets.xcassets */,
 				AD401EB92C35653500C3DB49 /* Preview Content */,
 			);
@@ -86,8 +93,9 @@
 		AD401EC12C35653B00C3DB49 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				AD401EC82C37908100C3DB49 /* ChessBoardView.swift */,
-				AD401EEE2C39471A00C3DB49 /* ChessPieceView.swift */,
+				AD5084052C3E6D2400451C6F /* ChessView */,
+				AD5084072C3E6D4400451C6F /* MainScreen.swift */,
+				AD401EB52C35653400C3DB49 /* ChessPlayView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -113,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				AD401EF32C3BE32800C3DB49 /* BoardAPIModel.swift */,
+				AD50840B2C3E761E00451C6F /* EventAPIModel.swift */,
 			);
 			path = LichessModel;
 			sourceTree = "<group>";
@@ -121,8 +130,19 @@
 			isa = PBXGroup;
 			children = (
 				AD401EF72C3BF6D600C3DB49 /* BoardAPI.swift */,
+				AD5084092C3E75B500451C6F /* EventAPI.swift */,
+				AD50840D2C3E835A00451C6F /* ChallengeAPI.swift */,
 			);
 			path = RestAPI;
+			sourceTree = "<group>";
+		};
+		AD5084052C3E6D2400451C6F /* ChessView */ = {
+			isa = PBXGroup;
+			children = (
+				AD401EC82C37908100C3DB49 /* ChessBoardView.swift */,
+				AD401EEE2C39471A00C3DB49 /* ChessPieceView.swift */,
+			);
+			path = ChessView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,13 +215,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD50840C2C3E761E00451C6F /* EventAPIModel.swift in Sources */,
 				AD401EF52C3BE32800C3DB49 /* BoardAPIModel.swift in Sources */,
 				AD401EC42C35655300C3DB49 /* ChessBoardModel.swift in Sources */,
 				AD401EC72C3565E100C3DB49 /* ChessBoardController.swift in Sources */,
 				AD401EF82C3BF6D600C3DB49 /* BoardAPI.swift in Sources */,
 				AD401EEF2C39471A00C3DB49 /* ChessPieceView.swift in Sources */,
-				AD401EB62C35653400C3DB49 /* ContentView.swift in Sources */,
+				AD50840A2C3E75B500451C6F /* EventAPI.swift in Sources */,
+				AD401EB62C35653400C3DB49 /* ChessPlayView.swift in Sources */,
+				AD5084082C3E6D4400451C6F /* MainScreen.swift in Sources */,
 				AD401EB42C35653400C3DB49 /* ChessV2App.swift in Sources */,
+				AD50840E2C3E835A00451C6F /* ChallengeAPI.swift in Sources */,
 				AD401EC92C37908100C3DB49 /* ChessBoardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
