@@ -1,13 +1,13 @@
 
 # Simple chess game
 
-This is my personal project (not finish yet), using Lichess free API https://lichess.org/api to play chess with Maia1 bot
+This is my personal project (not finish yet), using Lichess free API https://lichess.org/api to play chess with Maia1 bot, and play 10 minutes game with others people
 
 
 
-## Not finish feature
-Chess logic: Lichess API does not allow a move, but my game is allow every move(sike)  
-Play with others player: Lichess API have endpoint to do that, but I have not intergrated yet -_-
+## Implement in future
+Chess logic: Add chess logic to indicate legit move for player play esier  
+A lot of improvement -_-
 
 
 
