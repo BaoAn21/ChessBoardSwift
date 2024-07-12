@@ -26,10 +26,12 @@ struct EventAPI {
             }
             
             func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-                print(data)
                 let decoder = JSONDecoder()
                 if let jsonString = String(data: data, encoding: .utf8) {
-                    print(jsonString)
+                    if jsonString != "\n" {
+                        print("Event: "+jsonString)
+                    }
+                    
                 }
                 if let gameStartEvent = try? decoder.decode(GameStartEvent.self, from: data) {
                     DispatchQueue.main.async {

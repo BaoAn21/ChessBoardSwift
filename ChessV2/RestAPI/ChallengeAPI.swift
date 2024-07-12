@@ -41,12 +41,12 @@ struct ChallengeAPI {
                 return
             }
             
-            if let response = response as? HTTPURLResponse {
-                print("Status Code: \(response.statusCode)")
-                if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                    print("Response: \(responseString)")
-                }
-            }
+//            if let response = response as? HTTPURLResponse {
+//                print("Status Code: \(response.statusCode)")
+//                if let data = data, let responseString = String(data: data, encoding: .utf8) {
+//                    print("Response: \(responseString)")
+//                }
+//            }
         }
         task.resume()
         

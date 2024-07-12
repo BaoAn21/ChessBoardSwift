@@ -8,26 +8,33 @@
 import SwiftUI
 
 struct ChessPlayView: View {
-    let api = "lip_IWZ4ELQzWdJgDsjQOrOS"
+    let api: String
     let boardID: String
     @State var comebackButton = false
     @Binding var navigationComeback: Bool
     
-    @StateObject var chessBoardController = ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", orientation: false)
+    @State var boardOrientation: Bool = false
+    
+    @StateObject var chessBoardController = ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    
     var body: some View {
         VStack {
-            ChessBoardView(chessBoardController: chessBoardController) { move in
-                BoardAPI.move(tokenId: api, move: move, gameId: boardID)
-            }
+            ChessBoardViewV2(chessBoardController: chessBoardController, afterMove:  { move in
+                BoardAPI.move(tokenId: api, move: move, gameId: boardID) { completion in
+//                    if completion {
+//                        chessBoardController.makeMoveFromStringMove(move: move)
+//                    }
+                }
+            }, orientation: boardOrientation)
             .onAppear(perform: {
                 BoardAPI.streamBoard(gameId: boardID, tokenId: api) { move in
-                    let firstMove = chessBoardController.moveFormatToIndex(move: move).0
-                    let secondMove = chessBoardController.moveFormatToIndex(move: move).1
-                    _ = chessBoardController.move(fromIndex: firstMove, toIndex: secondMove)
+                    let firstMove = chessBoardController.StringMoveToIntMove(move: move).0
+                    let secondMove = chessBoardController.StringMoveToIntMove(move: move).1
+                    chessBoardController.makeMove(fromIndex: firstMove, toIndex: secondMove)
                 } boardInfoReceive: { info in
                     if info.black.name == "a123baotran" {
-                        print("hear")
-                        chessBoardController.orientationSwitch()
+                        print("blackView")
+                        boardOrientation = true
                     }
                 } boardStateReceive: { boardState in
                     if boardState.status == "resign" {
@@ -35,10 +42,18 @@ struct ChessPlayView: View {
                     }
                 }
             })
+            Button {
+                BoardAPI.resign(tokenId: api, boardId: boardID)
+            } label: {
+                Text("resign")
+            }
+            .disabled(comebackButton)
+            .opacity(comebackButton ? 0 : 1)
+
             Button(action: {
                 navigationComeback = false
             }, label: {
-                Text("Button")
+                Text("back to menu")
             })
             .disabled(!comebackButton)
             .opacity(comebackButton ? 1 : 0)
@@ -48,5 +63,5 @@ struct ChessPlayView: View {
 }
 
 #Preview {
-    ChessPlayView(boardID: "test", navigationComeback: .constant(false))
+    ChessPlayView(api: "df", boardID: "test", navigationComeback: .constant(false), boardOrientation: false)
 }

@@ -6,12 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Piece: Identifiable {
     let id: UUID
     let color: PieceColor
     let type: PieceType
-    var isPicked = false
     var image: String {
         switch color {
         case .white:
@@ -101,4 +101,20 @@ enum PieceType {
     case king
     case queen
     case bishop
+}
+
+
+struct Square: Identifiable {
+    var id: Int
+    var isChosen = false
+    var recentMoveFrom = false
+    var recentMoveTo = false
+    var couldGoTo = false
+    
+}
+
+extension Square {
+    var stringId: String {
+        ChessBoardController.IntIndexToStringIndex(index: id)
+    }
 }

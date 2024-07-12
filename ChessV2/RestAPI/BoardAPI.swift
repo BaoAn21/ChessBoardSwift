@@ -8,10 +8,38 @@
 import Foundation
 
 struct BoardAPI {
-    static func move(tokenId: String, move: String, gameId: String) {
+    static func splitConcatenatedJSON(_ concatenatedJSON: String) -> [String] {
+        var jsonStrings: [String] = []
+        var bracketCount = 0
+        var jsonStartIndex: String.Index?
+        
+        for (index, char) in concatenatedJSON.enumerated() {
+            if char == "{" {
+                if bracketCount == 0 {
+                    jsonStartIndex = concatenatedJSON.index(concatenatedJSON.startIndex, offsetBy: index)
+                }
+                bracketCount += 1
+            } else if char == "}" {
+                bracketCount -= 1
+                if bracketCount == 0, let startIndex = jsonStartIndex {
+                    let jsonEndIndex = concatenatedJSON.index(concatenatedJSON.startIndex, offsetBy: index + 1)
+                    let jsonString = String(concatenatedJSON[startIndex..<jsonEndIndex])
+                    jsonStrings.append(jsonString)
+                    jsonStartIndex = nil
+                }
+            }
+        }
+        
+        return jsonStrings
+    }
+    
+    static func move(tokenId: String, move: String, gameId: String, completion:@escaping (Bool) -> Void) {
         let urlString = "https://lichess.org/api/board/game/\(gameId)/move/\(move)"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
+            DispatchQueue.main.async {
+                completion(false)
+            }
             return
         }
         
@@ -26,9 +54,10 @@ struct BoardAPI {
             }
             
             if let response = response as? HTTPURLResponse {
-                print("Status Code: \(response.statusCode)")
-                if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                    print("Response: \(responseString)")
+                if response.statusCode == 200 {
+                    DispatchQueue.main.async {
+                        completion(true)
+                    }
                 }
             }
         }
@@ -38,12 +67,12 @@ struct BoardAPI {
     static func streamBoard(gameId: String, tokenId: String, moveReceice:@escaping (String) -> Void, boardInfoReceive:@escaping (BoardInfo) -> Void, boardStateReceive:@escaping (BoardState) -> Void ) {
         
         let url = URL(string: "https://lichess.org/api/board/game/stream/\(gameId)")!
-
+        
         // Create a URLRequest
         var request = URLRequest(url: url)
         request.setValue("Bearer \(tokenId)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
-
+        
         // Implement URLSessionDataDelegate to handle streaming data
         class StreamDelegate: NSObject, URLSessionDataDelegate {
             private let boardInfoReceive: (BoardInfo) -> Void
@@ -59,43 +88,72 @@ struct BoardAPI {
                 let decoder = JSONDecoder()
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print(jsonString)
-                }
-                if let boardState = try? decoder.decode(BoardState.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.moveReceive(getLatestMove(moves: boardState.moves))
-                        self.boardStateReceive(boardState)
-                    }
-                } else if let boardInfo = try? decoder.decode(BoardInfo.self, from: data) {
-                    DispatchQueue.main.async {
-                        print(boardInfo.black.name)
-                        self.boardInfoReceive(boardInfo)
-                        if !boardInfo.state.moves.isEmpty {
-                            self.moveReceive(getLatestMove(moves: boardInfo.state.moves))
+                    // Handle rare case where Json stick to each other
+                    let jsonStringArray = BoardAPI.splitConcatenatedJSON(jsonString)
+                    for s in jsonStringArray {
+                        guard let data = s.data(using: .utf8) else {
+                            return
+                        }
+                        if let boardState = try? decoder.decode(BoardState.self, from: data) {
+                            DispatchQueue.main.async {
+                                self.moveReceive(getLatestMove(moves: boardState.moves))
+                                self.boardStateReceive(boardState)
+                            }
+                        } else if let boardInfo = try? decoder.decode(BoardInfo.self, from: data) {
+                            DispatchQueue.main.async {
+                                print(boardInfo.black.name)
+                                self.boardInfoReceive(boardInfo)
+                                if !boardInfo.state.moves.isEmpty {
+                                    self.moveReceive(getLatestMove(moves: boardInfo.state.moves))
+                                }
+                            }
                         }
                     }
                 }
-//                 Print the JSON string if decoding fails
-//                else if let jsonString = String(data: data, encoding: .utf8) {
-//                    print("Received something")
-//                }
-//                do {
-//                    let data = try decoder.decode(BoardInfo.self, from: data)
-//                }catch {
-//                    print(error)
-//                }
             }
         }
-
+        
         func getLatestMove(moves: String) -> String {
-            let moveArray = moves.split(separator: " ")
-            return String(moveArray[moveArray.count - 1])
+            if !moves.isEmpty {
+                let moveArray = moves.split(separator: " ")
+                return String(moveArray[moveArray.count - 1])
+            } else {
+                return ""
+            }
         }
-
+        
         // Use the delegate in the session
         let streamDelegate = StreamDelegate(moveReceive: moveReceice, boardInfoReceive: boardInfoReceive, boardStateReceive: boardStateReceive)
         let streamSession = URLSession(configuration: .default, delegate: streamDelegate, delegateQueue: OperationQueue())
         let streamTask = streamSession.dataTask(with: request)
-
+        
         streamTask.resume()
+    }
+    
+    static func resign(tokenId: String, boardId: String) {
+        let urlString = "https://lichess.org/api/board/game/\(boardId)/resign"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(tokenId)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            
+            if response is HTTPURLResponse {
+                if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                    print("Response: \(responseString)")
+                }
+            }
+        }
+        task.resume()
+        
     }
 }
