@@ -21,6 +21,8 @@
 		AD50840E2C3E835A00451C6F /* ChallengeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD50840D2C3E835A00451C6F /* ChallengeAPI.swift */; };
 		AD5084102C3E9C4200451C6F /* ChessBoardViewV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD50840F2C3E9C4200451C6F /* ChessBoardViewV2.swift */; };
 		AD5084122C3E9DC700451C6F /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5084112C3E9DC700451C6F /* SquareView.swift */; };
+		AD5084152C41193100451C6F /* CountDownClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5084142C41193100451C6F /* CountDownClock.swift */; };
+		AD5084172C41242100451C6F /* CountDownViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5084162C41242100451C6F /* CountDownViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		AD50840D2C3E835A00451C6F /* ChallengeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeAPI.swift; sourceTree = "<group>"; };
 		AD50840F2C3E9C4200451C6F /* ChessBoardViewV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardViewV2.swift; sourceTree = "<group>"; };
 		AD5084112C3E9DC700451C6F /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
+		AD5084142C41193100451C6F /* CountDownClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownClock.swift; sourceTree = "<group>"; };
+		AD5084162C41242100451C6F /* CountDownViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +97,7 @@
 		AD401EC12C35653B00C3DB49 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AD5084132C41192200451C6F /* ClockView */,
 				AD5084052C3E6D2400451C6F /* ChessView */,
 				AD5084072C3E6D4400451C6F /* MainScreen.swift */,
 				AD401EB52C35653400C3DB49 /* ChessPlayView.swift */,
@@ -143,6 +148,15 @@
 				AD5084112C3E9DC700451C6F /* SquareView.swift */,
 			);
 			path = ChessView;
+			sourceTree = "<group>";
+		};
+		AD5084132C41192200451C6F /* ClockView */ = {
+			isa = PBXGroup;
+			children = (
+				AD5084142C41193100451C6F /* CountDownClock.swift */,
+				AD5084162C41242100451C6F /* CountDownViewModel.swift */,
+			);
+			path = ClockView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,7 +235,9 @@
 				AD401EC72C3565E100C3DB49 /* ChessBoardController.swift in Sources */,
 				AD401EF82C3BF6D600C3DB49 /* BoardAPI.swift in Sources */,
 				AD50840A2C3E75B500451C6F /* EventAPI.swift in Sources */,
+				AD5084152C41193100451C6F /* CountDownClock.swift in Sources */,
 				AD5084102C3E9C4200451C6F /* ChessBoardViewV2.swift in Sources */,
+				AD5084172C41242100451C6F /* CountDownViewModel.swift in Sources */,
 				AD401EB62C35653400C3DB49 /* ChessPlayView.swift in Sources */,
 				AD5084082C3E6D4400451C6F /* MainScreen.swift in Sources */,
 				AD401EB42C35653400C3DB49 /* ChessV2App.swift in Sources */,

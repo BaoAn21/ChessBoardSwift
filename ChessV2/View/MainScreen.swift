@@ -22,9 +22,16 @@ struct MainScreen: View {
                 }, label: {
                     Text("Challenge Maia1 Bot")
                 })
+                Button(action: {
+                    BoardAPI.seek10minGame(tokenId: api)
+                    isLoading = true
+                }, label: {
+                    Text("Play rated 10 min")
+                })
                 if isLoading {
                     Text("finding a game")
                 }
+                
             }
             .navigationTitle("Menu")
             .onAppear {

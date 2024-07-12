@@ -17,8 +17,12 @@ struct ChessPlayView: View {
     
     @StateObject var chessBoardController = ChessBoardController(fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     
+    @StateObject var countDownViewModelW = CountDownViewModel()
+    @StateObject var countDownViewModelB = CountDownViewModel()
     var body: some View {
         VStack {
+            CountDownClock(countDownViewModel: countDownViewModelB)
+            
             ChessBoardViewV2(chessBoardController: chessBoardController, afterMove:  { move in
                 BoardAPI.move(tokenId: api, move: move, gameId: boardID) { completion in
 //                    if completion {
@@ -27,21 +31,11 @@ struct ChessPlayView: View {
                 }
             }, orientation: boardOrientation)
             .onAppear(perform: {
-                BoardAPI.streamBoard(gameId: boardID, tokenId: api) { move in
-                    let firstMove = chessBoardController.StringMoveToIntMove(move: move).0
-                    let secondMove = chessBoardController.StringMoveToIntMove(move: move).1
-                    chessBoardController.makeMove(fromIndex: firstMove, toIndex: secondMove)
-                } boardInfoReceive: { info in
-                    if info.black.name == "a123baotran" {
-                        print("blackView")
-                        boardOrientation = true
-                    }
-                } boardStateReceive: { boardState in
-                    if boardState.status == "resign" {
-                        comebackButton = true
-                    }
-                }
+                streamBoard()
             })
+            
+            CountDownClock(countDownViewModel: countDownViewModelW)
+            
             Button {
                 BoardAPI.resign(tokenId: api, boardId: boardID)
             } label: {
@@ -60,6 +54,42 @@ struct ChessPlayView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
+    
+    
+    
+    func streamBoard() {
+        BoardAPI.streamBoard(gameId: boardID, tokenId: api) { move in
+            let firstMove = chessBoardController.StringMoveToIntMove(move: move).0
+            let secondMove = chessBoardController.StringMoveToIntMove(move: move).1
+            chessBoardController.makeMove(fromIndex: firstMove, toIndex: secondMove)
+        } boardInfoReceive: { info in
+            if info.black.name == "a123baotran" {
+                print("blackView")
+                boardOrientation = true
+            }
+            countDownViewModelW.setCoundown(mil: info.clock.initial)
+            countDownViewModelB.setCoundown(mil: info.clock.initial)
+            
+        } boardStateReceive: { boardState in
+            if boardState.status == "resign" {
+                comebackButton = true
+            }
+            countDownViewModelB.setCoundown(mil: boardState.btime)
+            countDownViewModelW.setCoundown(mil: boardState.wtime)
+            if (boardState.moves.split(separator: " ").count >= 2) {
+                if boardState.moves.split(separator: " ").count % 2 == 0 {
+                    countDownViewModelW.startTime()
+                    countDownViewModelB.stopCountdown()
+                } else {
+                    countDownViewModelW.stopCountdown()
+                    countDownViewModelB.startTime()
+                }
+                
+            }
+        }
+    }
+    
+    
 }
 
 #Preview {

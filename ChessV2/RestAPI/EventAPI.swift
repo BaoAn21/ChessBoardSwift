@@ -26,16 +26,22 @@ struct EventAPI {
             }
             
             func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-                let decoder = JSONDecoder()
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    if jsonString != "\n" {
+                if data.count > 1 {
+                    let decoder = JSONDecoder()
+                    if let jsonString = String(data: data, encoding: .utf8) {
                         print("Event: "+jsonString)
                     }
                     
-                }
-                if let gameStartEvent = try? decoder.decode(GameStartEvent.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.gameStartReceived(gameStartEvent)
+                    do {
+                        let gameStartEvent = try decoder.decode(GameStartEvent.self, from: data)
+                        DispatchQueue.main.async {
+                            self.gameStartReceived(gameStartEvent)
+                        }
+                    } catch {
+                        print("error in EventAPI: \(error)")
+                        if let jsonString = String(data: data, encoding: .utf8) {
+                            print("Error with: "+jsonString)
+                        }
                     }
                 }
             }
